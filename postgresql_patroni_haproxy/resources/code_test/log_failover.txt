@@ -1,0 +1,19 @@
+Current server is the primary.
+ID | Name | Position | Salary | Hire Date
+1 | John Doe | Software Engineer | 75000.00 | 2020-01-15
+2 | Jane Smith | Project Manager | 85000.00 | 2019-03-22
+3 | Alice Johnson | QA Engineer | 65000.00 | 2021-06-30
+4 | Bob Brown | DevOps Engineer | 78000.00 | 2018-11-05
+Current server is the primary.
+ID | Name | Position | Salary | Hire Date
+1 | John Doe | Software Engineer | 75000.00 | 2020-01-15
+2 | Jane Smith | Project Manager | 85000.00 | 2019-03-22
+3 | Alice Johnson | QA Engineer | 65000.00 | 2021-06-30
+4 | Bob Brown | DevOps Engineer | 78000.00 | 2018-11-05
+2025/01/19 22:49:19 Query failed: EOF
+Current server is the primary.
+ID | Name | Position | Salary | Hire Date
+1 | John Doe | Software Engineer | 75000.00 | 2020-01-15
+2 | Jane Smith | Project Manager | 85000.00 | 2019-03-22
+3 | Alice Johnson | QA Engineer | 65000.00 | 2021-06-30
+4 | Bob Brown | DevOps Engineer | 78000.00 | 2018-11-05
