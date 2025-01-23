@@ -1,0 +1,15 @@
+services:
+  redis:
+    image: redis:6.2.14
+    container_name: redis-demo
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data:/data
+    command: [
+      "redis-server",
+      "--requirepass", "password",
+      "--appendonly", "no",
+      "--dbfilename", "dump.rdb",
+      "--dir", "/data"
+    ]
