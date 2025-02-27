@@ -1,0 +1,85 @@
+groups:
+  - name: system_alerts
+    rules:
+      # Alert when instance is down
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+          user: BlackMetalz
+        annotations:
+          summary: "Instance {{ $labels.instance }} down"
+          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+          dashboard_url: "https://grafana/d/instance-status?var-instance={{ $labels.instance }}"
+          
+      # Alert on high CPU usage
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 10m
+        labels:
+          severity: warning
+          team: system
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage on {{ $labels.instance }} has been above 85% for the last 10 minutes."
+          value: "{{ $value }}%"
+          date: "2025-02-27 16:42:24"
+          
+      # Recording rule to pre-calculate memory usage percentage
+      - record: memory_usage_percent
+        expr: 100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)
+        
+      # Alert on high memory usage based on recording rule
+      - alert: HighMemoryUsage
+        expr: memory_usage_percent > 90
+        for: 5m
+        labels:
+          severity: warning
+          owner: BlackMetalz
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage on {{ $labels.instance }} has been above 90% for the last 5 minutes."
+          
+  - name: application_alerts
+    rules:
+      # Alert on high latency
+      - alert: HighRequestLatency
+        expr: rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m]) > 1
+        for: 10m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "High HTTP request latency"
+          description: "HTTP request latency is above 1 second for the last 10 minutes."
+      
+      # Alert on error rate
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100 > 5
+        for: 5m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "High HTTP error rate"
+          description: "HTTP error rate is above 5% for the last 5 minutes."
+          current_value: "{{ $value }}%"
+          
+      # Recording rule for API success rate
+      - record: api:success_rate:5m
+        expr: sum(rate(http_requests_total{status=~"2.."}[5m])) / sum(rate(http_requests_total[5m]))
+
+  # Database monitoring
+  - name: database_alerts
+    rules:
+      - alert: SlowQueries
+        expr: rate(mysql_slow_queries[5m]) > 10
+        for: 15m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Increase in slow queries"
+          description: "Database is experiencing more than 10 slow queries per second for the last 15 minutes."
+          runbook: "https://wiki.example.com/runbooks/mysql-slow-queries"

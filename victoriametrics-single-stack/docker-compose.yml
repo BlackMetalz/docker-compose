@@ -1,0 +1,66 @@
+services:
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:v1.112.0
+    container_name: victoriametrics
+    ports:
+      - "8428:8428"
+    volumes:
+      - ./vmdir:/victoria-metrics-data
+    command:
+      - '--storageDataPath=/victoria-metrics-data'
+      - '--retentionPeriod=12'
+      - '--memory.allowedPercent=60'
+
+  vmagent:
+    image: victoriametrics/vmagent:v1.112.0
+    container_name: vmagent
+    ports:
+      - "8429:8429"
+    volumes:
+      - ./vmagent-config.yml:/etc/vmagent/config.yml
+    command:
+      - '--promscrape.config=/etc/vmagent/config.yml'
+      - '--remoteWrite.url=http://victoriametrics:8428/api/v1/write'
+
+  vmalert:
+    image: victoriametrics/vmalert:v1.112.0
+    container_name: vmalert
+    ports:
+      - "8880:8880"
+    volumes:
+      - ./vmalert-config.yml:/etc/vmalert/config.yml
+    command:
+      - '--rule=/etc/vmalert/config.yml'
+      - '--datasource.url=http://victoriametrics:8428'
+      - '--notifier.url=http://localhost:9093'
+      - '--remoteWrite.url=http://victoriametrics:8428'
+      - '--remoteRead.url=http://victoriametrics:8428'
+      - '--external.label=cluster=dev-env'
+      - '--external.label=replica=rep1'
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    pid: "host"
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    user: "0"  # Run as root to ensure access to host metrics
+
+  grafana:
+    image: grafana/grafana:11.5.2
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
