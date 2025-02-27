@@ -1,0 +1,23 @@
+services:
+  jenkins:
+    image: jenkins/jenkins:2.492.1-lts
+    container_name: jenkins
+    # Set standard proxy environment variables WITH protocol
+    environment:
+      - HTTP_PROXY=http://10.0.0.1:8800
+      - HTTPS_PROXY=http://10.0.0.1:8800
+      - http_proxy=http://10.0.0.1:8800
+      - https_proxy=http://10.0.0.1:8800
+      - NO_PROXY=localhost,127.0.0.1,.local
+      - no_proxy=localhost,127.0.0.1,.local
+      # Add Java system properties for proxy
+      - JAVA_OPTS=-Dhttp.proxyHost=10.0.0.1 -Dhttp.proxyPort=8800 -Dhttps.proxyHost=10.0.0.1 -Dhttps.proxyPort=8800 -Dhttp.nonProxyHosts=localhost|127.0.0.1
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./jenkins-proxy-setup.groovy:/usr/share/jenkins/ref/init.groovy.d/proxy-config.groovy
+
+volumes:
+  jenkins_home:
