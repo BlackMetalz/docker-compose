@@ -1,0 +1,6 @@
+services:
+  nginx-ip-logger:
+    image: kienlt992/ip-logger:latest
+    ports:
+      - "5000:80"
+    #network_mode: host
