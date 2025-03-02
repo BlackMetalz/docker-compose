@@ -32,7 +32,7 @@ func initProvider() (func(context.Context) error, error) {
 	// Get collector endpoint from environment variable or use default
 	endpoint := os.Getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
 	if endpoint == "" {
-		endpoint = "otel-collector:4317"
+		endpoint = "localhost:4317"
 	}
 
 	// Set up a connection to the collector

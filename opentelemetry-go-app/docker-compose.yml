@@ -22,20 +22,20 @@ services:
       - otel-network
 
   # Sample Go application
-  demo-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    environment:
-      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
-      - SERVICE_NAME=demo-service
-    depends_on:
-      - otel-collector
-      - jaeger
-    networks:
-      - otel-network
+  # demo-service:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
+  #     - SERVICE_NAME=demo-service
+  #   depends_on:
+  #     - otel-collector
+  #     - jaeger
+  #   networks:
+  #     - otel-network
 
 networks:
   otel-network:
