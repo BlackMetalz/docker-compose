@@ -1,0 +1,1 @@
+- This is used for k8s deployment when application goes with opentelemetry
