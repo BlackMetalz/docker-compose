@@ -4,6 +4,8 @@ services:
     container_name: jenkins
     # Set standard proxy environment variables WITH protocol
     environment:
+      # Set timezone to GMT+7 (Asia/Ho_Chi_Minh)
+      - TZ=Asia/Ho_Chi_Minh
       - HTTP_PROXY=http://10.0.0.1:8800
       - HTTPS_PROXY=http://10.0.0.1:8800
       - http_proxy=http://10.0.0.1:8800
@@ -11,7 +13,7 @@ services:
       - NO_PROXY=localhost,127.0.0.1,.local
       - no_proxy=localhost,127.0.0.1,.local
       # Add Java system properties for proxy
-      - JAVA_OPTS=-Dhttp.proxyHost=10.0.0.1 -Dhttp.proxyPort=8800 -Dhttps.proxyHost=10.0.0.1 -Dhttps.proxyPort=8800 -Dhttp.nonProxyHosts=localhost|127.0.0.1
+      - JAVA_OPTS=-Dhttp.proxyHost=10.0.0.1 -Dhttp.proxyPort=8800 -Dhttps.proxyHost=10.0.0.1 -Dhttps.proxyPort=8800 -Dhttp.nonProxyHosts=localhost|127.0.0.1 -Duser.timezone=Asia/Ho_Chi_Minh
     ports:
       - "8080:8080"
       - "50000:50000"
