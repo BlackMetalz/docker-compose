@@ -1,0 +1,23 @@
+services:
+  checkmk:
+    image: checkmk/check-mk-free:2.1.0-latest
+    container_name: checkmk
+    restart: unless-stopped
+    ports:
+      - "8080:5000"
+    volumes:
+      - ./cmk_data:/omd/sites
+      - ./telegram:/omd/sites/cmk/local/share/check_mk/notifications/telegram
+    environment:
+      - CMK_SITE=mysite
+      - CMK_PASSWORD=mypassword  # Change this to a secure password
+      - HTTP_PROXY=http://10.1.1.1:8800
+      - HTTPS_PROXY=http://10.1.1.1:8800
+      - NO_PROXY=localhost,127.0.0.1
+
+    networks:
+      - checkmk-network
+
+networks:
+  checkmk-network:
+    driver: bridge
