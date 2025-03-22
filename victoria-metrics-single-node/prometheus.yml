@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 60s  # Interval between each scrape
+  scrape_timeout: 30s   # Timeout for each scrape
+  
+scrape_configs:
+  - job_name: 'ES-Dev'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['10.0.0.1:9114']  # target to scrape
