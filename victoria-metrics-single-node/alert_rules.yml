@@ -1,0 +1,10 @@
+groups:
+  - name: ExampleAlerts
+    rules:
+      - alert: HighLatencyImmediate
+        expr: http_request_duration_seconds > 0.5
+        labels:
+          severity: critical
+        annotations:
+          summary: "Immediate High Latency Detected"
+          description: "A request exceeded 0.5 second latency."

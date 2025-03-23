@@ -1,0 +1,39 @@
+route:
+  receiver: 'telegram-notifications'
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+
+receivers:
+- name: 'telegram-notifications'
+  telegram_configs:
+  - bot_token: '<YOUR_TELEGRAM_BOT_TOKEN>'
+    chat_id: <YOUR_TELEGRAM_CHAT_ID>
+    send_resolved: true # Optional: Send notifications when alerts are resolved.
+    parse_mode: 'HTML' # Optional: Use HTML formatting.
+    disable_web_page_preview: true # Optional: Disable web page previews.
+
+templates:
+- |-
+    {{ define "telegram.message" }}
+    {{ range .Alerts }}
+    <b>{{ .Annotations.summary | default .Labels.alertname }}</b>
+
+    {{ if .Labels.severity }}Severity: {{ .Labels.severity }}{{ end }}
+    {{ if .Labels.namespace }}Namespace: {{ .Labels.namespace }}{{ end }}
+    {{ if .Labels.job }}Job: {{ .Labels.job }}{{ end }}
+    {{ if .Labels.instance }}Instance: {{ .Labels.instance }}{{ end }}
+
+    {{ if .Annotations.description }}Description: {{ .Annotations.description }}{{ end }}
+
+    {{ if gt (len .GeneratorURL) 0 }}<a href="{{ .GeneratorURL }}">View in Prometheus</a>{{ end }}
+
+    {{ if gt (len .DashboardURL) 0 }}<a href="{{ .DashboardURL }}">View Dashboard</a>{{ end }}
+
+    {{ if eq .Status "firing" }}🔥 Firing{{ else }}✅ Resolved{{ end }}
+    {{ end }}
+    {{ end }}
+
+    {{ define "telegram.title" }}
+    {{ .CommonLabels.alertname }}: {{ .GroupLabels.alertname }}
+    {{ end }}

@@ -13,5 +13,35 @@ services:
       - "-promscrape.config=/etc/vm/prometheus.yml"  # Specify the path to the config file
     restart: unless-stopped
 
+
+  vmalert:
+    image: victoriametrics/vmalert:v1.114.0
+    container_name: vmalert
+    ports:
+      - "8880:8880"  # Port for vmalert HTTP API/UI
+    volumes:
+      - ./alert_rules.yml:/etc/alerts/alert_rules.yml  # Mount alert rules file
+    command:
+      - "-rule=/etc/alerts/alert_rules.yml"  # Path to alert rules
+      - "-datasource.url=http://victoria-metrics:8428"  # Connect to VM
+      - "-notifier.url=http://alertmanager:9093"  # Connect to Alertmanager
+      - "-httpListenAddr=:8880"  # vmalert listens on 8880
+    depends_on:
+      - victoria-metrics
+      - alertmanager
+    restart: unless-stopped
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: alertmanager
+    ports:
+      - "9093:9093"  # Default Alertmanager port
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml  # Mount Alertmanager config
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"  # Use mounted config file
+    restart: unless-stopped
+
+
 volumes:
   vm_data:
