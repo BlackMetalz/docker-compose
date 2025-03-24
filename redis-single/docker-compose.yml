@@ -13,3 +13,4 @@ services:
       "--dbfilename", "dump.rdb",
       "--dir", "/data"
     ]
+    restart: always
