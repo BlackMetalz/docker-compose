@@ -48,6 +48,7 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   esdata:
