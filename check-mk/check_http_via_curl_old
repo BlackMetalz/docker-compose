@@ -4,12 +4,12 @@
 
 URL="$1"
 PROXY="$2"
-OUTPUT=$(curl -s -o /dev/null -w "%{http_code}" -x "$PROXY" "$URL" --connect-timeout 10 --max-time 10)
+OUTPUT=$(curl -s -o /dev/null -w "%{http_code}" -x "$PROXY" "$URL")
 
 if [ "$OUTPUT" -ge 200 ] && [ "$OUTPUT" -lt 400 ]; then
   echo "HTTP OK - Status code $OUTPUT"
   exit 0
-elif [ "$OUTPUT" -ge 400 ] && [ "$OUTPUT" -lt 500 ] || [ "$OUTPUT" -eq 525 ]; then
+elif [ "$OUTPUT" -ge 400 ] && [ "$OUTPUT" -lt 500 ]; then
   echo "HTTP WARNING - Status code $OUTPUT"
   exit 1
 else
