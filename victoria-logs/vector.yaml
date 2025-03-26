@@ -1,0 +1,28 @@
+sources:
+  docker_logs:
+    type: docker_logs
+    docker_host: unix:///var/run/docker.sock
+
+transforms:
+  parsed_logs:
+    type: remap
+    inputs: ["docker_logs"]
+    source: |
+      # Handle potential hostname retrieval error
+      .host, err = get_hostname()
+      if err != null {
+        .host = "unknown"
+      }
+
+sinks:
+  victorialogs:
+    type: http
+    inputs: ["parsed_logs"]
+    uri: "http://victorialogs:9428/insert/v1/logs"
+    method: "post"
+    encoding:
+      codec: json
+    request:
+      retry_attempts: 5
+      retry_initial_backoff_ms: 500
+      retry_max_backoff_ms: 10000
