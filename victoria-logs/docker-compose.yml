@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  victorialogs:
+    image: victoriametrics/victoria-logs:v1.17.0-victorialogs
+    container_name: victorialogs
+    command:
+      - "--storageDataPath=/vlogs"
+      - "--httpListenAddr=:9428"
+      - "--loggerLevel=INFO"
+    volumes:
+      - vlogs-data:/vlogs
+    ports:
+      - "9428:9428"
+    networks:
+      - logging_network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - logging_network
+
+  fluentd:
+    image: fluent/fluent-bit:latest
+    container_name: fluentd
+    volumes:
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./parsers.conf:/fluent-bit/etc/parsers.conf
+      - ./logs:/var/log/nginx
+    depends_on:
+      - victorialogs
+      - nginx
+    networks:
+      - logging_network
+
+networks:
+  logging_network:
+    driver: bridge
+
+volumes:
+  vlogs-data:
