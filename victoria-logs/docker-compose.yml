@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   victorialogs:
     image: victoriametrics/victoria-logs:v1.17.0-victorialogs
