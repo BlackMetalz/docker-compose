@@ -1,0 +1,12 @@
+services:
+  grafana:
+    image: grafana/grafana:11.5.3
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - HTTP_PROXY=http://10.0.0.1:8800
+      - HTTPS_PROXY=http://10.0.0.1:8800
+      - NO_PROXY=localhost,127.0.0.1

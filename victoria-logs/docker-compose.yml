@@ -6,6 +6,9 @@ services:
       - "--storageDataPath=/vlogs"
       - "--httpListenAddr=:9428"
       - "--loggerLevel=INFO"
+      - "-retentionPeriod=90d"
+      - "-search.maxQueryDuration=600s"
+      - "-insert.maxLineSizeBytes=1MB"
     volumes:
       - vlogs-data:/vlogs
     ports:
