@@ -6,11 +6,12 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - /data/prometheus:/etc/prometheus
+      - /data/prometheus:/etc/prometheus:z
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-lifecycle"
       - "--web.enable-remote-write-receiver"
       - "--log.level=info"
-      - "--storage.tsdb.retention.time=30d"
-    network_mode: bridge
+      - "--storage.tsdb.retention.time=60d"
+    network_mode: host
+    user: root # xD

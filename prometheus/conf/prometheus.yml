@@ -1,0 +1,30 @@
+global:
+  scrape_interval: 60s     # How frequently to scrape targets
+  evaluation_interval: 60s # How frequently to evaluate rules
+  scrape_timeout: 15s      # How long until a scrape times out
+
+# Alertmanager configuration (optional)
+#alerting:
+#  alertmanagers:
+#    - static_configs:
+#        - targets:
+          # - alertmanager:9093
+
+# Rule files to load (optional)
+#rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Self-monitoring
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # HAProxy Exporter
+  - job_name: "haproxy"
+    scrape_interval: 5s
+    static_configs:
+      - targets: ["haproxy:8405"]
+    metrics_path: /

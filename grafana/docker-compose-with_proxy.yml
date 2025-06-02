@@ -9,4 +9,9 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - HTTP_PROXY=http://10.0.0.1:8800
       - HTTPS_PROXY=http://10.0.0.1:8800
-      - NO_PROXY=localhost,127.0.0.1
+      - NO_PROXY=localhost,127.0.0.1,10.0.0.1
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+volumes:
+  grafana-data:
