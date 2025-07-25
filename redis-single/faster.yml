@@ -1,0 +1,6 @@
+services:
+  redis:
+    image: redis:6.2.14
+    command: redis-server --requirepass pass-here
+    ports:
+      - "6379:6379"
