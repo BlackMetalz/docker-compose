@@ -3,10 +3,9 @@ services:
     image: prom/prometheus
     container_name: prometheus
     restart: always
-    ports:
-      - "9090:9090"
-    volumes:
-      - /data/prometheus:/etc/prometheus:z
+    configs:
+      - source: prometheus_config
+        target: /etc/prometheus/prometheus.yml
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.enable-lifecycle"
@@ -14,4 +13,8 @@ services:
       - "--log.level=info"
       - "--storage.tsdb.retention.time=60d"
     network_mode: host
-    user: root # xD
+    user: root
+
+configs:
+  prometheus_config:
+    file: ./prometheus.yml
