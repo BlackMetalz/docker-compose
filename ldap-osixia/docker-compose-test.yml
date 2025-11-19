@@ -1,0 +1,55 @@
+services:
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: openldap
+    environment:
+      LDAP_ORGANISATION: "Kienlt Company"
+      LDAP_DOMAIN: "kienlt.local"
+      LDAP_ADMIN_PASSWORD: "admin"
+      LDAP_CONFIG_PASSWORD: "admin123"
+      LDAP_RFC2307BIS_SCHEMA: "false"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+      LDAP_TLS_VERIFY_CLIENT: "never"
+    ports:
+      - "389:389"
+      - "636:636"
+    volumes:
+      - ldap-data:/var/lib/ldap
+      - ldap-config:/etc/ldap/slapd.d
+    networks:
+      - ldap-network
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: phpldapadmin
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: "openldap"
+      PHPLDAPADMIN_HTTPS: "false"
+    ports:
+      - "8080:80"
+    depends_on:
+      - openldap
+    networks:
+      - ldap-network
+
+  ldap-auth-demo:
+    image: node:18-alpine
+    container_name: ldap-auth-demo
+    working_dir: /app
+    command: sh -c "sleep 10 && npm install ldapjs express && node server.js"
+    ports:
+      - "3333:3000"
+    volumes:
+      - ./server.js:/app/server.js
+    depends_on:
+      - openldap
+    networks:
+      - ldap-network
+
+networks:
+  ldap-network:
+    driver: bridge
+
+volumes:
+  ldap-data:
+  ldap-config:
