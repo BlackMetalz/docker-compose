@@ -7,7 +7,23 @@ dn: ou=groups,dc=kienlt,dc=local
 objectClass: organizationalUnit
 ou: groups
 
-# Test Users
+# Users - Define users first
+dn: uid=superadmin,ou=users,dc=kienlt,dc=local
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: superadmin
+cn: Super Admin
+sn: Admin
+givenName: Super
+displayName: Super Administrator
+mail: superadmin@kienlt.local
+userPassword: 123123
+uidNumber: 10000
+gidNumber: 9000
+homeDirectory: /home/superadmin
+loginShell: /bin/bash
+
 dn: uid=kienlt-dev1,ou=users,dc=kienlt,dc=local
 objectClass: inetOrgPerson
 objectClass: posixAccount
@@ -20,8 +36,72 @@ displayName: Kienlt Dev1
 mail: kienlt-dev1@kienlt.local
 userPassword: 123123
 uidNumber: 10001
-gidNumber: 10001
+gidNumber: 9001
 homeDirectory: /home/kienlt-dev1
+loginShell: /bin/bash
+
+dn: uid=kienlt-dev2,ou=users,dc=kienlt,dc=local
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: kienlt-dev2
+cn: Kienlt Dev2
+sn: LT
+givenName: Kienlt
+displayName: Kienlt Dev2
+mail: kienlt-dev2@kienlt.local
+userPassword: 123123
+uidNumber: 10002
+gidNumber: 9001
+homeDirectory: /home/kienlt-dev2
+loginShell: /bin/bash
+
+dn: uid=kienlt,ou=users,dc=kienlt,dc=local
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: kienlt
+cn: Kienlt
+sn: LT
+givenName: Kienlt
+displayName: Kienlt Developer
+mail: kienlt@kienlt.local
+userPassword: 123123
+uidNumber: 10003
+gidNumber: 9001
+homeDirectory: /home/kienlt
+loginShell: /bin/bash
+
+dn: uid=user1,ou=users,dc=kienlt,dc=local
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: user1
+cn: User One
+sn: One
+givenName: User
+displayName: User One
+mail: user1@kienlt.local
+userPassword: 123123
+uidNumber: 10004
+gidNumber: 9002
+homeDirectory: /home/user1
+loginShell: /bin/bash
+
+dn: uid=user2,ou=users,dc=kienlt,dc=local
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: user2
+cn: User Two
+sn: Two
+givenName: User
+displayName: User Two
+mail: user2@kienlt.local
+userPassword: 123123
+uidNumber: 10005
+gidNumber: 9002
+homeDirectory: /home/user2
 loginShell: /bin/bash
 
 dn: uid=test.user,ou=users,dc=kienlt,dc=local
@@ -35,89 +115,36 @@ givenName: Test
 displayName: Test User
 mail: test.user@kienlt.local
 userPassword: 123123
-uidNumber: 10002
-gidNumber: 10002
+uidNumber: 10006
+gidNumber: 9001
 homeDirectory: /home/test.user
 loginShell: /bin/bash
 
-dn: uid=kienlt-dev2,ou=users,dc=kienlt,dc=local
-objectClass: inetOrgPerson
-objectClass: posixAccount
-objectClass: shadowAccount
-uid: kienlt-dev2
-cn: Kienlt Dev2
-sn: LT
-givenName: Kienlt
-mail: kienlt-dev2@kienlt.local
-userPassword: 123123
-uidNumber: 10000
-gidNumber: 10000
-homeDirectory: /home/kienlt-dev2
-loginShell: /bin/bash
+# Groups - Define after users
+dn: cn=admins,ou=groups,dc=kienlt,dc=local
+objectClass: posixGroup
+cn: admins
+description: Administrator Team
+gidNumber: 9000
+memberUid: superadmin
 
-dn: uid=user1,ou=users,dc=kienlt,dc=local
-objectClass: inetOrgPerson
-objectClass: posixAccount
-objectClass: shadowAccount
-uid: user1
-cn: User One
-sn: One
-givenName: User
-mail: user1@kienlt.local
-userPassword: 123123
-uidNumber: 10003
-gidNumber: 10000
-homeDirectory: /home/user1
-loginShell: /bin/bash
+dn: cn=developers,ou=groups,dc=kienlt,dc=local
+objectClass: posixGroup
+cn: developers
+description: Development Team
+gidNumber: 9001
+memberUid: kienlt-dev1
+memberUid: kienlt-dev2
+memberUid: kienlt
+memberUid: test.user
 
-dn: uid=user2,ou=users,dc=kienlt,dc=local
-objectClass: inetOrgPerson
-objectClass: posixAccount
-objectClass: shadowAccount
-uid: user2
-cn: User Two
-sn: Two
-givenName: User
-mail: user2@kienlt.local
-userPassword: 123123
-uidNumber: 10004
-gidNumber: 10000
-homeDirectory: /home/user2
-loginShell: /bin/bash
-
-dn: uid=superadmin,ou=users,dc=kienlt,dc=local
-objectClass: inetOrgPerson
-objectClass: posixAccount
-objectClass: shadowAccount
-uid: superadmin
-cn: Super Admin
-sn: Admin
-givenName: Super
-mail: superadmin@kienlt.local
-userPassword: 123123
-uidNumber: 10005
-gidNumber: 10005
-homeDirectory: /home/superadmin
-loginShell: /bin/bash
-
-# Groups
 dn: cn=users,ou=groups,dc=kienlt,dc=local
 objectClass: posixGroup
 cn: users
-gidNumber: 10000
+description: Regular Users
+gidNumber: 9002
 memberUid: user1
 memberUid: user2
 
-dn: cn=developers,ou=groups,dc=kienlt,dc=local
-objectClass: groupOfNames
-cn: developers
-description: Development Team
-member: uid=kienlt-dev1,ou=users,dc=kienlt,dc=local
-member: uid=kienlt-dev2,ou=users,dc=kienlt,dc=local
-member: uid=test.user,ou=users,dc=kienlt,dc=local
 
-dn: cn=admins,ou=groups,dc=kienlt,dc=local
-objectClass: groupOfNames
-cn: admins
-description: Admin Team
-member: uid=superadmin,ou=users,dc=kienlt,dc=local
+
