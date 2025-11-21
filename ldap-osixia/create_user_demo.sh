@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Tạo passwords hash
-PASS_KIENLT=$(docker exec openldap slappasswd -s kienlt123)
-PASS_USER1=$(docker exec openldap slappasswd -s password1)  
-PASS_USER2=$(docker exec openldap slappasswd -s password2)
+PASS_KIENLT=$(docker exec openldap slappasswd -s 123123)
+PASS_USER1=$(docker exec openldap slappasswd -s 123123)  
+PASS_USER2=$(docker exec openldap slappasswd -s 123123)
 
 docker exec openldap bash -c "ldapadd -x -D 'cn=admin,dc=kienlt,dc=local' -w admin << EOF
 dn: ou=users,dc=kienlt,dc=local

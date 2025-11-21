@@ -9,14 +9,14 @@ services:
       LDAP_ADMIN_PASSWORD: "admin"
       LDAP_CONFIG_PASSWORD: "admin123"
       LDAP_RFC2307BIS_SCHEMA: "false"
-      LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "false"
       LDAP_TLS_VERIFY_CLIENT: "never"
     ports:
       - "389:389"
       - "636:636"
     volumes:
-      - ldap-data:/var/lib/ldap
-      - ldap-config:/etc/ldap/slapd.d
+      - ./custom-ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom
+
     networks:
       - ldap-network
 
@@ -28,6 +28,23 @@ services:
       PHPLDAPADMIN_HTTPS: "false"
     ports:
       - "8080:80"
+    depends_on:
+      - openldap
+    networks:
+      - ldap-network
+
+  ldap-account-manager:
+    image: ldapaccountmanager/lam:stable
+    container_name: ldap-account-manager
+    environment:
+      LDAP_DOMAIN: "kienlt.local"
+      LDAP_BASE_DN: "dc=kienlt,dc=local"
+      LDAP_SERVER: "ldap://openldap:389"
+      LDAP_USER: "cn=admin,dc=kienlt,dc=local"
+      LAM_PASSWORD: "admin"
+      LAM_LANG: "en_US"
+    ports:
+      - "8081:80"
     depends_on:
       - openldap
     networks:
