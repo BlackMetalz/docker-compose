@@ -11,10 +11,23 @@ phpLDAPadmin: http://localhost:8080
 Login DN: cn=admin,dc=kienlt,dc=local / Password: admin
 ```
 
-# Ldapsearch
+# ldapsearch command
 ```
 docker exec openldap ldapsearch -x -b "dc=kienlt,dc=local" -D "cn=admin,dc=kienlt,dc=local" -w admin
 ```
+
+# Test user tồn tại
+ldapsearch -x -H ldap://localhost:389 \
+  -D "cn=admin,dc=kienlt,dc=local" \
+  -w admin \
+  -b "ou=users,dc=kienlt,dc=local" \
+  "(uid=kienlt)"
+
+# Test authenticate user
+ldapwhoami -x -H ldap://localhost:389 \
+  -D "uid=kienlt,ou=users,dc=kienlt,dc=local" \
+  -w 123123
+
 
 # Ldap account manager
 ✅ Đã thêm **LDAP Account Manager** (LAM)
